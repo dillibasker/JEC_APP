@@ -20,31 +20,38 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
 
-    final String apiUrl = "http://192.168.129.136:5000/register";
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "email": emailController.text,
-        "password": passwordController.text,
-      }),
-    );
+    final String apiUrl = "http://192.168.129.136:5000/api/login"; // FIXED
 
-    if (response.statusCode == 200) {
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": emailController.text.trim(),
+          "password": passwordController.text.trim(),
+        }),
+      );
+
       final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data["message"])),
-      );
+      
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data["message"])),
+        );
 
-      // Navigate to Home Page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else {
-      final error = jsonDecode(response.body);
+        // Navigate to Home Page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data["message"])),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error["message"])),
+        SnackBar(content: Text("Network error! Please try again.")),
       );
     }
 
@@ -52,11 +59,11 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = false;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false, // Prevents layout shifting when keyboard opens
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -73,11 +80,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Bigger Logo
                 Image.asset("assets/images/logo.png", width: 250, height: 250),
                 const SizedBox(height: 20),
 
-                // Welcome Text
                 const Text(
                   "Welcome Back!",
                   style: TextStyle(
@@ -93,18 +98,19 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // Login Card
                 Card(
                   elevation: 10,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Email Input
+                        // ✅ Added Controller for Email
                         TextField(
+                          controller: emailController,
                           decoration: InputDecoration(
                             labelText: "Email",
                             prefixIcon: Icon(Icons.email, color: Colors.purple),
@@ -115,8 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 15),
 
-                        // Password Input
+                        // ✅ Added Controller for Password
                         TextField(
+                          controller: passwordController,
                           decoration: InputDecoration(
                             labelText: "Password",
                             prefixIcon: Icon(Icons.lock, color: Colors.purple),
@@ -128,15 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        // Login Button
+                        // ✅ Login Button Calls API
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
+                          onTap: isLoading ? null : loginUser, // Disabled when loading
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
                             width: double.infinity,
@@ -149,15 +150,17 @@ class _LoginPageState extends State<LoginPage> {
                                 end: Alignment.bottomRight,
                               ),
                             ),
-                            child: const Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            child: Center(
+                              child: isLoading
+                                  ? CircularProgressIndicator(color: Colors.white)
+                                  : const Text(
+                                      "Login",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
@@ -166,9 +169,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                const SizedBox(height: 40), // Space before developer credit
+                const SizedBox(height: 40),
 
-                // Developer Credit
                 const Text(
                   "Developed by Team STARFIRE 🚀",
                   style: TextStyle(color: Colors.white70),
