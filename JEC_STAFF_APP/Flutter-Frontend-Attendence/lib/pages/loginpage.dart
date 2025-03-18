@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'homepage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_project_app/pages/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,49 +17,60 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
 
   Future<void> loginUser() async {
-    setState(() {
-      isLoading = true;
-    });
+  setState(() {
+    isLoading = true;
+  });
 
-    final String apiUrl = "http://192.168.129.136:5000/api/login"; // FIXED
+  final String apiUrl = "http://192.168.129.136:5000/api/register"; 
 
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-        }),
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "email": emailController.text.trim(),
+        "password": passwordController.text.trim(),
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    
+    
+    print("Response Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(data["message"])),
       );
 
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data["message"])),
-        );
-
-        // Navigate to Home Page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data["message"])),
-        );
-      }
-    } catch (e) {
+      
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          print("Navigating to HomePage...");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      });
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Network error! Please try again.")),
+        SnackBar(content: Text(data["message"])),
       );
     }
-
-    setState(() {
-      isLoading = false;
-    });
+  } catch (e) {
+    print("Error: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Network error! Please try again.")),
+    );
   }
+
+  setState(() {
+    isLoading = false;
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   Image.asset("assets/images/logo.png", width: 250, height: 250),
                   const SizedBox(height: 20),
                   const Text(
-                    "Welcome Back!",
+                    "Welcome ck!",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 8),
