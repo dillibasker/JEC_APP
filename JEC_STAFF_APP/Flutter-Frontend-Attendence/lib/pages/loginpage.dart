@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       final data = jsonDecode(response.body);
-      
+
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(data["message"])),
@@ -75,107 +75,90 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/images/logo.png", width: 250, height: 250),
-                const SizedBox(height: 20),
-
-                const Text(
-                  "Welcome Back!",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/images/logo.png", width: 250, height: 250),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Welcome Back!",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Login to continue",
-                  style: TextStyle(fontSize: 18, color: Colors.white70),
-                ),
-                const SizedBox(height: 30),
-
-                Card(
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // ✅ Added Controller for Email
-                        TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            prefixIcon: Icon(Icons.email, color: Colors.purple),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-
-                        // ✅ Added Controller for Password
-                        TextField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            labelText: "Password",
-                            prefixIcon: Icon(Icons.lock, color: Colors.purple),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          obscureText: true,
-                        ),
-                        const SizedBox(height: 20),
-
-                        // ✅ Login Button Calls API
-                        GestureDetector(
-                          onTap: isLoading ? null : loginUser, // Disabled when loading
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              gradient: const LinearGradient(
-                                colors: [Colors.blue, Colors.purple],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                  const SizedBox(height: 8),
+                  const Text("Login to continue", style: TextStyle(fontSize: 18, color: Colors.white70)),
+                  const SizedBox(height: 30),
+                  Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              prefixIcon: Icon(Icons.email, color: Colors.purple),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Center(
-                              child: isLoading
-                                  ? CircularProgressIndicator(color: Colors.white)
-                                  : const Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                          ),
+                          const SizedBox(height: 15),
+                          TextField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              labelText: "Password",
+                              prefixIcon: Icon(Icons.lock, color: Colors.purple),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: isLoading ? null : loginUser,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.purple],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: Center(
+                                child: isLoading
+                                    ? CircularProgressIndicator(color: Colors.white)
+                                    : const Text(
+                                        "Login",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 40),
-
-                const Text(
-                  "Developed by Team STARFIRE 🚀",
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ],
+                  const SizedBox(height: 40),
+                  const Text("Developed by Team STARFIRE 🚀", style: TextStyle(color: Colors.white70)),
+                ],
+              ),
             ),
           ),
         ),
