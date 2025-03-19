@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
         console.log("User registered successfully");  
         res.status(201).json({ message: "User registered successfully" ,userId: user.userId });
     } catch (err) {
-        console.error("Register Error:", err);  // ✅ Debugging
+        console.error("Register Error:", err);  
         res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
 });
