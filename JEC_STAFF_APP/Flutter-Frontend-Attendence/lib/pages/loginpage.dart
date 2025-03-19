@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   Image.asset("assets/images/logo.png", width: 250, height: 250),
                   const SizedBox(height: 20),
                   const Text(
-                    "Welcome ck!",
+                    "Welcome !",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 8),
