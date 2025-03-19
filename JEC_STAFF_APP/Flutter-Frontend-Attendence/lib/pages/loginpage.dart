@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
 
     final data = jsonDecode(response.body);
     
-    
     print("Response Status Code: ${response.statusCode}");
     print("Response Body: ${response.body}");
 
