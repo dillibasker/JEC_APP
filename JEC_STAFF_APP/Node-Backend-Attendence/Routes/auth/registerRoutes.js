@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
 
         const { email, password } = req.body;
         if (!email || !password) {
-            console.log("Validation failed");  // ✅ Debugging
+            console.log("Validation failed");  
             return res.status(400).json({ message: "All fields are required" });
         }
 
