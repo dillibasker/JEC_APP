@@ -22,50 +22,39 @@ class _LoginPageState extends State<LoginPage> {
   });
 
   final String apiUrl = "http://192.168.129.136:5000/api/register"; 
-
+  
   try {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "email": emailController.text.trim(),
-        "password": passwordController.text.trim(),
-      }),
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode({
+      "email": emailController.text.trim(),
+      "password": passwordController.text.trim(),
+    }),
+  );
+
+  print("Response Status: ${response.statusCode}");
+  print("Response Body: ${response.body}");  // Debugging line
+
+  final data = jsonDecode(response.body);
+
+  if (response.statusCode == 201) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
-
-    final data = jsonDecode(response.body);
-    
-    print("Response Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data["message"])),
-      );
-
-      
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          print("Navigating to HomePage...");
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        }
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data["message"])),
-      );
-    }
-  } catch (e) {
-    print("Error: $e");
+  } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Network error! Please try again.")),
+      SnackBar(content: Text(data["message"] ?? "Login failed")),
     );
   }
-
-  setState(() {
+} catch (e) {
+  print("Error: $e");
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text("Network error! Please try again.")),
+  );
+}
+   setState(() {
     isLoading = false;
   });
 }
