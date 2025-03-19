@@ -3,6 +3,8 @@ import 'homepage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_project_app/pages/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,7 +40,16 @@ class _LoginPageState extends State<LoginPage> {
 
   final data = jsonDecode(response.body);
 
+  
+
   if (response.statusCode == 201) {
+
+    final data = jsonDecode(response.body);
+      String userId = data["userId"];
+      // Save user ID in SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("userId", userId);
+      
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
