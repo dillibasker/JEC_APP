@@ -9,5 +9,5 @@ const StudentSchema=new mongoose.Schema({
       attendance: [{ date: Date, status: String }],
 })
 
-const students=mongoose.Model("students",StudentSchema)
+const students=mongoose.model("students",StudentSchema)
 module.exports = students
