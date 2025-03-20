@@ -4,7 +4,6 @@ const cors=require("cors")
 const { default: mongoose } = require("mongoose")
 const bodyParser = require("body-parser");
 
-
 const app=express()
 app.use(express.json())
 app.use(cors({
@@ -25,10 +24,6 @@ app.use("/api/addStudents", require("./Routes/Attendence/addStudent"));
 app.use("/api/attendence", require("./Routes/Attendence/markAttendence"));
 app.use("/api/attendance/:rollNumber",require("./Routes/Attendence/getAttendenceRecordStudent"));
 app.use("/api/students/:department/:year/:section",require("./Routes/Attendence/getAllStudents"));
-
-
-
-
 
 const PORT=process.env.PORT || 5000
 app.listen(PORT,()=>{ console.log(`server running on port ${PORT}`)})
