@@ -10,3 +10,4 @@ if (!student) return res.status(400).send("Student Not found")
     await student.save();
     res.send(student);
 })
+
