@@ -18,14 +18,13 @@ dotenv.config()
 
 mongoose.connect(process.env.MONGO_URL).then(()=> console.log("Mongo DB is connect")).catch((err) => console.log("Mongo db is not connected",(err)))
 
-app.use("/api/student", require("./Routes/studentRoutes"));
 app.use("/api/register", require("./Routes/auth/registerRoutes"));
 app.use("/api/login", require("./Routes/auth/loginRoutes"));
 app.use("/api/forgot-password", require("./Routes/auth/forgot-password"));
 app.use("/api/addStudents", require("./Routes/Attendence/addStudent"));
 app.use("/api/attendence", require("./Routes/Attendence/markAttendence"));
 app.use("/api/attendance/:rollNumber",require("./Routes/Attendence/getAttendenceRecordStudent"));
-app.use("/api/attendance/",require("./Routes/Attendence/getAttendenceRecordStudent"));
+app.use("/api/students/:department/:year/:section",require("./Routes/Attendence/getAllStudents"));
 
 
 
