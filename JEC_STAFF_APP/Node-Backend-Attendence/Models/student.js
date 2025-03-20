@@ -1,11 +1,13 @@
 const mongoose=require("mongoose")
 
-const studenSchema= new mongoose.Schema({
-      studentId: { type: mongoose.Schema.Types.ObjectId, ref: "Student", required: true }, // Student Reference
-      rollNumber: { type: String, required: true }, // Student Roll Number
-      studentName: { type: String, required: true }, // Student Name
-      status: { type: String, enum: ["Present", "Absent", "Late"], required: true }, // Attendance Status
-      timestamp: { type: Date, default: Date.now },
+const StudentSchema=new mongoose.Schema({
+      name: String,
+      rollNumber: String,
+      department: String,
+      year: Number,
+      section: String,
+      attendance: [{ date: Date, status: String }],
 })
 
-const studentModel=mongoose.model("studentdetail",studenSchema)
+const students=mongoose.Model("students",StudentSchema)
+module.exports = students
