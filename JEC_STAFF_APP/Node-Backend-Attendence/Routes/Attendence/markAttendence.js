@@ -2,6 +2,8 @@ const express=require("express")
 const router=express.router()
 const Student=require("../../Models/students")
 
+// Mark attendence 
+
 router.post("/attendence",async(req,res)=>{
     const { rollNumber, date, status } = req.body;
     const student = await Student.findOne({ rollNumber });

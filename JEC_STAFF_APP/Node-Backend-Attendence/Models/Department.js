@@ -5,6 +5,5 @@ const DepartmentSchema = new mongoose.Schema({
     classes: [{ year: Number, section: String, students: [StudentSchema] }],
   });
   
-
 const Department=mongoose.Model("Department",DepartmentSchema)
 module.exports = Department

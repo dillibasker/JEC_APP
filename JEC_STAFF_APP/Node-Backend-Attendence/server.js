@@ -22,6 +22,11 @@ app.use("/api/student", require("./Routes/studentRoutes"));
 app.use("/api/register", require("./Routes/auth/registerRoutes"));
 app.use("/api/login", require("./Routes/auth/loginRoutes"));
 app.use("/api/forgot-password", require("./Routes/auth/forgot-password"));
+app.use("/api/addStudents", require("./Routes/Attendence/addStudent"));
+app.use("/api/attendence", require("./Routes/Attendence/markAttendence"));
+
+
+
 
 const PORT=process.env.PORT || 5000
 app.listen(PORT,()=>{ console.log(`server running on port ${PORT}`)})
