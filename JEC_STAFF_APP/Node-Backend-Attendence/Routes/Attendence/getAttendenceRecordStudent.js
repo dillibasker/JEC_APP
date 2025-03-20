@@ -10,3 +10,5 @@ router.get("/attendance/:rollNumber", async (req, res) => {
   
     res.send(student.attendance);
   });
+
+  module.exports=router

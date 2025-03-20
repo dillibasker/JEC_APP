@@ -9,3 +9,5 @@ router.get("/students/:department/:year/:section",async(req,res)=>{
     const students=await Student.find(department,year,section)
     res.send(students)
 })
+
+module.exports=router

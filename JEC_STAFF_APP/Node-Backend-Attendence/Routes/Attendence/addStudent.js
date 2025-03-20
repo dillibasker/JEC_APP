@@ -9,3 +9,5 @@ router.post("/addStudents",async(req,res)=>{
     await student.save();
     res.status(201).send(student)
 })
+
+module.exports=router
