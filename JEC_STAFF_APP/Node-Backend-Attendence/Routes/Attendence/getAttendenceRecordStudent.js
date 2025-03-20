@@ -1,5 +1,5 @@
 const express=require("express")
-const router=express.router()
+const router=express.Router()
 const Student=require("../../Models/students")
 
 // today student resent or not 
