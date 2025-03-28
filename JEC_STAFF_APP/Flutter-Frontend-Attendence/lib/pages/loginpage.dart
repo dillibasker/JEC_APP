@@ -6,6 +6,7 @@ import 'package:flutter_project_app/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -23,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
   });
 
-  final String apiUrl = "http://192.168.129.136:5000/api/register"; 
+  final String apiUrl = "http://192.168.144.136:5000/api/register"; 
   
   try {
   final response = await http.post(
@@ -37,6 +38,8 @@ class _LoginPageState extends State<LoginPage> {
 
   print("Response Status: ${response.statusCode}");
   print("Response Body: ${response.body}");  // Debugging line
+
+    final data = jsonDecode(response.body);
 
   if (response.statusCode == 201) {
 

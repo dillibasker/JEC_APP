@@ -24,6 +24,8 @@ app.use("/api/addStudents", require("./Routes/Attendence/addStudent"));
 app.use("/api/attendence", require("./Routes/Attendence/markAttendence"));
 app.use("/api/attendance/:rollNumber",require("./Routes/Attendence/getAttendenceRecordStudent"));
 app.use("/api/students/:department/:year/:section",require("./Routes/Attendence/getAllStudents"));
+app.use("/api/user", require("./Routes/profile/profile"));
+
 
 const PORT=process.env.PORT || 5000
 app.listen(PORT,()=>{ console.log(`server running on port ${PORT}`)})
