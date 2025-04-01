@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 
 class AttendancePage extends StatefulWidget {
   final String session;
+  final String department;
+  final String className;
+  final String section;
 
-  const AttendancePage({super.key, required this.session});
+  const AttendancePage({
+    super.key,
+    required this.session,
+    required this.department,
+    required this.className,
+    required this.section,
+  });
 
   @override
   _AttendancePageState createState() => _AttendancePageState();
@@ -48,20 +57,32 @@ class _AttendancePageState extends State<AttendancePage> {
         "id": student["id"],
         "name": student["name"],
         "status": student["present"] ? "Present" : "Absent",
+        "department": widget.department,
+        "class": widget.className,
+        "section": widget.section,
+        "session": widget.session,
       };
     }).toList();
 
-    print("Attendance for ${widget.session} Submitted: $attendanceData");
+    print("Attendance for ${widget.department} - ${widget.className} "
+        "${widget.section} (${widget.session}) Submitted: $attendanceData");
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("${widget.session} Attendance Submitted!")),
+      SnackBar(
+        content: Text(
+            "${widget.session} Attendance for ${widget.className} ${widget.section} Submitted!"),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.session} Attendance")),
+      appBar: AppBar(
+        title: Text(
+          "${widget.department} - ${widget.className} ${widget.section} (${widget.session})",
+        ),
+      ),
       body: Column(
         children: [
           Padding(
