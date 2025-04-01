@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
   });
 
-  final String apiUrl = "http://192.168.144.136:5000/api/register"; 
+  final String apiUrl = "http://192.168.197.136:5000/api/register"; 
   
   try {
   final response = await http.post(

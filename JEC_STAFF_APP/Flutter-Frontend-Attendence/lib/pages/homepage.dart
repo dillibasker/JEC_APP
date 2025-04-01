@@ -11,8 +11,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -30,6 +28,11 @@ class _HomePageState extends State<HomePage> {
     fetchUserData();
   }
 
+    Future<String?> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   Future<void> fetchUserData() async {
     try {
        final String? token = await getToken();
@@ -39,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       }
 
       final response = await http.get(
-   Uri.parse("http://192.168.144.136:5000/api/user/profile"),
+   Uri.parse("http://192.168.197.136:5000/api/user/profile"),
    headers: {
      "Authorization": "Bearer $token" // Ensure this is the correct token
    }
@@ -62,15 +65,7 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-Future<void> _getUserToken() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = prefs.getString('token'); // Fetch token
 
-  if (token != null) {
-    setState(() {
-      userToken = token;
-    });
-  }
 }
 
   final List<Map<String, dynamic>> categories = [
@@ -510,4 +505,4 @@ Future<void> _getUserToken() async {
       ],
     );
   }
-}
+

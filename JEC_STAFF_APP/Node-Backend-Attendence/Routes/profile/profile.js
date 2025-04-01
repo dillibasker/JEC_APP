@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../Models/userSchema");
 
-const authMiddleware = require("../../middleware/authMiddleware");
+const authMiddleware = require("./authMiddleware");
 
 router.get("/profile", authMiddleware, async (req, res) => {
     try {
