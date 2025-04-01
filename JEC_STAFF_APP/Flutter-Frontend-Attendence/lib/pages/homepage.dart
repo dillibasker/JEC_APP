@@ -7,9 +7,6 @@ import 'package:flutter_project_app/pages/assignmentPage.dart';
 import 'package:flutter_project_app/pages/ExamTimetablePage.dart';
 import 'package:flutter_project_app/pages/timetablepage.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_project_app/pages/RequestPage.dart';
 import 'package:flutter_project_app/pages/ExamResultPage.dart';
 
@@ -22,54 +19,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-   String userName = "Loading...";
-
-   @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-    Future<String?> getToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  Future<void> fetchUserData() async {
-    try {
-       final String? token = await getToken();
-      if (token == null) {
-        print("Error: No token found");
-        return;
-      }
-
-      final response = await http.get(
-   Uri.parse("http://192.168.197.136:5000/api/user/profile"),
-   headers: {
-     "Authorization": "Bearer $token" // Ensure this is the correct token
-   }
-);
-      if (response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        setState(() {
-           userName = data['username'] ?? "User"; // Assuming the API returns {"username": "John Doe"}
-        });
-      } else {
-        print("Error: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching user data: $e");
-    }
-  }
-  String userName = "Jai Ganesh H";
+  String userName = "kumaran";
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-}
   }
 
   final List<Map<String, dynamic>> categories = [
@@ -651,4 +606,4 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
+}
