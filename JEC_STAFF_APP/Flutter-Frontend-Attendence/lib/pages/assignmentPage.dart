@@ -57,51 +57,27 @@ class _AssignmentPageState extends State<AssignmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FC),
       appBar: AppBar(
         title: const Text("Assignments"),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
-        elevation: 2,
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Create Assignment",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
+            _buildSectionTitle("📝 Create Assignment"),
+            const SizedBox(height: 12),
+            _buildTextField("Assignment Title", _titleController),
+            const SizedBox(height: 12),
+            _buildTextField("Description", _descriptionController, maxLines: 3),
+            const SizedBox(height: 12),
 
-            // Assignment Title
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: "Assignment Title",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            // Assignment Description
-            TextField(
-              controller: _descriptionController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: "Description",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            // Select Deadline Button with Gradient
+            // Deadline Picker Row
             Row(
               children: [
                 Expanded(
@@ -115,9 +91,10 @@ class _AssignmentPageState extends State<AssignmentPage> {
                 ),
                 InkWell(
                   onTap: () => _pickDeadline(context),
+                  borderRadius: BorderRadius.circular(10),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
+                        horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [Colors.purple, Colors.blue],
@@ -126,78 +103,49 @@ class _AssignmentPageState extends State<AssignmentPage> {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      "Pick Date",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.calendar_today,
+                            color: Colors.white, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          "Pick Date",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-
-            // Marks Field
-            TextField(
-              controller: _marksController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Total Marks",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
+            const SizedBox(height: 12),
+            _buildTextField("Total Marks", _marksController, isNumber: true),
             const SizedBox(height: 20),
-
-            // Publish Assignment Button with Gradient
-            SizedBox(
-              width: double.infinity,
-              child: InkWell(
-                onTap: _publishAssignment,
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.blue],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "Publish Assignment",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            _buildGradientButton("Publish Assignment", _publishAssignment),
             const SizedBox(height: 30),
 
-            // Display Published Assignments
-            const Text(
-              "Published Assignments",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-
+            _buildSectionTitle("📚 Published Assignments"),
+            const SizedBox(height: 10),
             _assignments.isEmpty
                 ? const Center(child: Text("No assignments published yet."))
                 : Column(
                     children: _assignments.map((assignment) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: Offset(0, 4),
+                            )
+                          ],
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -211,7 +159,7 @@ class _AssignmentPageState extends State<AssignmentPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 6),
                               Text(
                                 assignment["description"],
                                 style: const TextStyle(fontSize: 14),
@@ -221,20 +169,34 @@ class _AssignmentPageState extends State<AssignmentPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "Deadline: ${assignment["deadline"].toLocal()}"
-                                        .split(' ')[0],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red,
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.calendar_today,
+                                          size: 16, color: Colors.red),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "Deadline: ${assignment["deadline"].toLocal()}"
+                                            .split(' ')[0],
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "Marks: ${assignment["marks"]}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.grade,
+                                          size: 16, color: Colors.blue),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "Marks: ${assignment["marks"]}",
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -245,6 +207,62 @@ class _AssignmentPageState extends State<AssignmentPage> {
                     }).toList(),
                   ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller,
+      {int maxLines = 1, bool isNumber = false}) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+        labelText: label,
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGradientButton(String text, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.purple, Colors.blue],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          ),
         ),
       ),
     );

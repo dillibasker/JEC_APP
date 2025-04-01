@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class StudentRemarkPage extends StatefulWidget {
+  final String department;
   final String className;
 
-  const StudentRemarkPage({super.key, required this.className});
+  const StudentRemarkPage({
+    super.key,
+    required this.department,
+    required this.className,
+  });
 
   @override
   _StudentRemarkPageState createState() => _StudentRemarkPageState();
@@ -58,15 +63,21 @@ class _StudentRemarkPageState extends State<StudentRemarkPage> {
                 String remark = remarkController.text.trim();
                 if (remark.isNotEmpty) {
                   setState(() {
-                    students
-                        .firstWhere((student) =>
-                            student["name"] ==
-                            filteredStudents[index]["name"])["remarks"]
-                        .add(remark);
+                    final student = students.firstWhere((student) =>
+                        student["name"] == filteredStudents[index]["name"]);
+                    student["remarks"].add({
+                      "text": remark,
+                      "department": widget.department,
+                      "className": widget.className,
+                      "timestamp": DateTime.now().toString(),
+                    });
                   });
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Remark Added Successfully!")),
+                    SnackBar(
+                      content: Text(
+                          "Remark Added for ${filteredStudents[index]["name"]} in ${widget.className}!"),
+                    ),
                   );
                 }
               },
@@ -115,7 +126,9 @@ class _StudentRemarkPageState extends State<StudentRemarkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Remarks - ${widget.className}")),
+      appBar: AppBar(
+        title: Text("${widget.department} - ${widget.className} Remarks"),
+      ),
       body: Column(
         children: [
           Padding(
@@ -162,29 +175,45 @@ class _StudentRemarkPageState extends State<StudentRemarkPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: List.generate(
                               filteredStudents[index]["remarks"].length,
-                              (remarkIndex) => GestureDetector(
-                                onLongPress: () =>
-                                    _confirmRemoveRemark(index, remarkIndex),
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    gradient: const LinearGradient(
-                                      colors: [Colors.red, Colors.redAccent],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                              (remarkIndex) {
+                                final remark = filteredStudents[index]
+                                    ["remarks"][remarkIndex];
+                                return GestureDetector(
+                                  onLongPress: () =>
+                                      _confirmRemoveRemark(index, remarkIndex),
+                                  child: Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      gradient: const LinearGradient(
+                                        colors: [Colors.red, Colors.redAccent],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          remark["text"],
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
+                                        Text(
+                                          "Added: ${remark["timestamp"].substring(0, 16)}",
+                                          style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 12),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Text(
-                                    filteredStudents[index]["remarks"]
-                                        [remarkIndex],
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 14),
-                                  ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                           ),
                         ],

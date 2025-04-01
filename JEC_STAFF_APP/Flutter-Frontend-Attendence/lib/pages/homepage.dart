@@ -7,11 +7,8 @@ import 'package:flutter_project_app/pages/assignmentPage.dart';
 import 'package:flutter_project_app/pages/ExamTimetablePage.dart';
 import 'package:flutter_project_app/pages/timetablepage.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-
+import 'package:flutter_project_app/pages/RequestPage.dart';
+import 'package:flutter_project_app/pages/ExamResultPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,56 +19,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-   String userName = "Loading...";
-
-   @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    try {
-       final String? token = await getToken();
-      if (token == null) {
-        print("Error: No token found");
-        return;
-      }
-
-      final response = await http.get(
-   Uri.parse("http://192.168.144.136:5000/api/user/profile"),
-   headers: {
-     "Authorization": "Bearer $token" // Ensure this is the correct token
-   }
-);
-      if (response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        setState(() {
-           userName = data['username'] ?? "User"; // Assuming the API returns {"username": "John Doe"}
-        });
-      } else {
-        print("Error: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching user data: $e");
-    }
-  }
+  String userName = "Jai Ganesh H";
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-Future<void> _getUserToken() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = prefs.getString('token'); // Fetch token
-
-  if (token != null) {
-    setState(() {
-      userToken = token;
-    });
-  }
-}
 
   final List<Map<String, dynamic>> categories = [
     {"icon": Icons.person_pin_rounded, "label": "Attendance"},
@@ -127,7 +81,7 @@ Future<void> _getUserToken() async {
   Widget _buildTimetableDialogButton(BuildContext context, String type) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context); // Close the dialog
+        Navigator.pop(context);
         if (type == "Class Timetable") {
           Navigator.push(
             context,
@@ -209,20 +163,17 @@ Future<void> _getUserToken() async {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double itemWidth =
-              (constraints.maxWidth - (12 * 3)) / 4; // 4 columns, 3 spaces
-          double itemHeight = itemWidth * 1.1; // Adjust for better spacing
+          double itemWidth = (constraints.maxWidth - (12 * 3)) / 4;
+          double itemHeight = itemWidth * 1.1;
 
           return GridView.builder(
             shrinkWrap: true,
-            physics:
-                const NeverScrollableScrollPhysics(), // Prevent scrolling inside column
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio:
-                  itemWidth / itemHeight, // Ensures items fit correctly
+              childAspectRatio: itemWidth / itemHeight,
             ),
             itemCount: categories.length,
             itemBuilder: (context, index) {
@@ -249,8 +200,17 @@ Future<void> _getUserToken() async {
                       MaterialPageRoute(builder: (context) => AssignmentPage()),
                     );
                   } else if (category["label"] == "Timetable") {
-                    _showTimetableDialog(
-                        context); // Show the timetable dialog box
+                    _showTimetableDialog(context);
+                  } else if (category["label"] == "Request") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RequestPage()),
+                    );
+                  } else if (category["label"] == "Exams") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ExamResultPage()),
+                    );
                   }
                 },
                 child: Column(
@@ -293,32 +253,168 @@ Future<void> _getUserToken() async {
   }
 
   void _showAttendanceDialog(BuildContext context) {
+    final List<String> departments = [
+      "Computer Science",
+      "Electrical Engineering",
+      "Mechanical Engineering",
+      "Civil Engineering"
+    ];
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Select Attendance Session"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDialogButton(context, "Morning"),
-              const SizedBox(height: 10),
-              _buildDialogButton(context, "Afternoon"),
-            ],
+          title: const Text("Select Department"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: departments.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: _buildDepartmentButton(context, departments[index]),
+                );
+              },
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildDialogButton(BuildContext context, String session) {
+  Widget _buildDepartmentButton(BuildContext context, String department) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+        _showClassSectionDialog(context, department);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            department,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showClassSectionDialog(BuildContext context, String department) {
+    final List<Map<String, String>> classSections = [
+      {"class": "I Year", "section": "A"},
+      {"class": "I Year", "section": "B"},
+      {"class": "II Year", "section": "A"},
+      {"class": "II Year", "section": "B"},
+      {"class": "III Year", "section": "A"},
+      {"class": "III Year", "section": "B"},
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Select Class & Section - $department"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: classSections.length,
+              itemBuilder: (context, index) {
+                final classSection = classSections[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: _buildClassSectionButton(
+                    context,
+                    department,
+                    classSection["class"]!,
+                    classSection["section"]!,
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildClassSectionButton(BuildContext context, String department,
+      String className, String section) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                  "Select Attendance Session\n$className - Section $section"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildSessionButton(
+                      context, "Morning", department, className, section),
+                  const SizedBox(height: 10),
+                  _buildSessionButton(
+                      context, "Afternoon", department, className, section),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "$className - Section $section",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSessionButton(BuildContext context, String session,
+      String department, String className, String section) {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AttendancePage(session: session),
+            builder: (context) => AttendancePage(
+              session: session,
+              department: department,
+              className: className,
+              section: section,
+            ),
           ),
         );
       },
