@@ -4,7 +4,7 @@ const StudentSchema=new mongoose.Schema({
       name: String,
       rollNumber: String,
       department: String,
-      year: Number,
+      className: String,
       section: String,
       attendance: [{ date: Date, status: String }],
 })

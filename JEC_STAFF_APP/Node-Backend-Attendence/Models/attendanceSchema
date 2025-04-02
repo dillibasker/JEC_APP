@@ -1,0 +1,14 @@
+const mongoose=require("mongoose")
+const AttendanceSchema = new mongoose.Schema({
+  studentId: String,
+  studentName: String,
+  department: String,
+  className: String,
+  section: String,
+  session: String,
+  status: String,
+  date: { type: Date, default: Date.now },
+});
+
+const Attendance = mongoose.model("Attendance", AttendanceSchema);
+module.exports = Attendance
