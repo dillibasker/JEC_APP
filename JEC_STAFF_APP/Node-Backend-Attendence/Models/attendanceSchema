@@ -5,6 +5,7 @@ const AttendanceSchema = new mongoose.Schema({
   department: String,
   className: String,
   section: String,
+  
   session: String,
   status: String,
   date: { type: Date, default: Date.now },
