@@ -1,9 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_project_app/pages/StudentRemarkPage.dart';
 
-class RemarkPage extends StatelessWidget {
-  // Define departments and their respective classes
-  final Map<String, List<String>> departmentClasses = {
+class RemarkPage extends StatefulWidget {
+  const RemarkPage({super.key});
+
+  @override
+  _RemarkPageState createState() => _RemarkPageState();
+}
+
+class _RemarkPageState extends State<RemarkPage> {
+  final String baseUrl = "http://192.168.50.136:5000/api/remarks/remark"; // Replace with backend URL
+  Map<String, List<String>> departmentClasses = {
     "Computer Science": [
       "CSE I SEC A",
       "CSE I SEC B",
@@ -37,8 +46,7 @@ class RemarkPage extends StatelessWidget {
       "CE III SEC B",
     ],
   };
-
-  RemarkPage({super.key});
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +74,7 @@ class RemarkPage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: const LinearGradient(
-          colors: [Colors.purple, Colors.blue], 
+          colors: [Colors.purple, Colors.blue],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -118,13 +126,14 @@ class RemarkPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context); // Close the dialog
+          Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => StudentRemarkPage(
                 department: department,
                 className: className,
+                baseUrl: baseUrl,
               ),
             ),
           );
