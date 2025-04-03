@@ -11,7 +11,7 @@ class RemarkPage extends StatefulWidget {
 }
 
 class _RemarkPageState extends State<RemarkPage> {
-  final String baseUrl = "http://192.168.50.136:5000/api/remarks/remark"; // Replace with backend URL
+  final String baseUrl = "http://192.168.50.136:5000/api/remarks/remark"; 
   Map<String, List<String>> departmentClasses = {
     "Computer Science": [
       "CSE I SEC A",
