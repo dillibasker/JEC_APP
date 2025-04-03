@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,17 +13,19 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool isLoading = false;
+  final storage = const FlutterSecureStorage();
+  bool isLoading = false; // Loading indicator state
 
   Future<void> loginUser() async {
     setState(() {
       isLoading = true;
     });
 
-    final String apiUrl = "http://192.168.50.136:5000/api/register";
+    final String apiUrl = "http://192.168.50.136:5000/api/login/login";
 
     try {
       final response = await http.post(
@@ -33,15 +37,14 @@ class _LoginPageState extends State<LoginPage> {
         }),
       );
 
-      print("Response Status: ${response.statusCode}");
-      print("Response Body: ${response.body}");
-
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201) {
-        String userId = data["userId"];
-        
-        // Save user ID in SharedPreferences
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String userId = data["user"]["_id"];
+        String token = data["token"];
+
+        await storage.write(key: "token", value: token);
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("userId", userId);
 
@@ -59,13 +62,12 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Network error! Please try again.")),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
-
-    setState(() {
-      isLoading = false;
-    });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
