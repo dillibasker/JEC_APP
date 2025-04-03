@@ -13,12 +13,11 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final storage = const FlutterSecureStorage();
-  bool isLoading = false; // Loading indicator state
+  bool isLoading = false; 
 
   Future<void> loginUser() async {
     setState(() {
