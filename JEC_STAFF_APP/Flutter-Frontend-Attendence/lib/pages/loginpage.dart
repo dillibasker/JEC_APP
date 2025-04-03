@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent], // Restored gradient
+            colors: [Colors.blueAccent, Colors.purpleAccent], 
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
