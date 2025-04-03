@@ -57,7 +57,7 @@ class _AttendancePageState extends State<AttendancePage> {
       return {
         "id": student["id"],
         "name": student["name"],
-        "status": student["present"] ? "Present" : "Absent",
+        "status": student["present"] ? "Absent" : "Present",
         "department": widget.department,
         "className": widget.className,
         "section": widget.section,
