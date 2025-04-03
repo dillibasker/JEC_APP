@@ -66,7 +66,7 @@ class RemarkPage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: const LinearGradient(
-          colors: [Colors.purple, Colors.blue], // 🔥 Original Colors Restored
+          colors: [Colors.purple, Colors.blue], 
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -134,7 +134,7 @@ class RemarkPage extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             gradient: const LinearGradient(
-              colors: [Colors.blue, Colors.purple], // 🔥 Original Colors Restored
+              colors: [Colors.blue, Colors.purple],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
