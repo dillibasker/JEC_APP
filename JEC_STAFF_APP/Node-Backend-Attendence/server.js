@@ -22,6 +22,7 @@ app.use("/api/login", require("./Routes/auth/loginRoutes"));
 app.use("/api/forgot-password", require("./Routes/auth/forgot-password"));
 app.use("/api/submit-attendance", require("./Routes/Attendence/markAttendence"));
 app.use("/api/get-attendance", require("./Routes/Attendence/getAllStudents"));
+app.use("/api/remarks", require("./Routes/Remarks/remarksRoute"));
 
 
 
