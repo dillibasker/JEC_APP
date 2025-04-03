@@ -20,11 +20,9 @@ mongoose.connect(process.env.MONGO_URL).then(()=> console.log("Mongo DB is conne
 app.use("/api/register", require("./Routes/auth/registerRoutes"));
 app.use("/api/login", require("./Routes/auth/loginRoutes"));
 app.use("/api/forgot-password", require("./Routes/auth/forgot-password"));
-app.use("/api/addStudents", require("./Routes/Attendence/addStudent"));
-app.use("/api/attendence", require("./Routes/Attendence/markAttendence"));
-app.use("/api/attendance/:rollNumber",require("./Routes/Attendence/getAttendenceRecordStudent"));
-app.use("/api/students/:department/:year/:section",require("./Routes/Attendence/getAllStudents"));
-app.use("/api/user", require("./Routes/profile/profile"));
+app.use("/api/submit-attendance", require("./Routes/Attendence/markAttendence"));
+app.use("/api/get-attendance", require("./Routes/Attendence/getAllStudents"));
+
 
 
 const PORT=process.env.PORT || 5000

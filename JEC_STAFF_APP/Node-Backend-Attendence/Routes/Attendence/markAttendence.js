@@ -1,16 +1,17 @@
 const express=require("express")
 const router=express.Router()
-const Student=require("../../Models/students")
+const Attendance=require("../../Models/attendanceSchema")
 
 // Mark attendence 
 
-router.post("/attendence",async(req,res)=>{
-    const { rollNumber, date, status } = req.body;
-    const student = await Student.findOne({ rollNumber });
-if (!student) return res.status(400).send("Student Not found") 
-    student.attendence.push({date,status})
-    await student.save();
-    res.send(student);
-})
+router.post('/sa', async (req, res) => {
+    try {
+      await Attendance.insertMany(req.body);
+      res.status(201).json({ message: 'Attendance submitted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
 
 module.exports=router

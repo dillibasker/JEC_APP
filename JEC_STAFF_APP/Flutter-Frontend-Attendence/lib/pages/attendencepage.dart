@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AttendancePage extends StatefulWidget {
   final String session;
@@ -50,22 +52,38 @@ class _AttendancePageState extends State<AttendancePage> {
       filteredStudents[index]["present"] = !filteredStudents[index]["present"];
     });
   }
-
-  void submitAttendance() {
+  Future<void> submitAttendance() async {
     List<Map<String, dynamic>> attendanceData = filteredStudents.map((student) {
       return {
         "id": student["id"],
         "name": student["name"],
         "status": student["present"] ? "Present" : "Absent",
         "department": widget.department,
-        "class": widget.className,
+        "className": widget.className,
         "section": widget.section,
         "session": widget.session,
       };
     }).toList();
 
-    print("Attendance for ${widget.department} - ${widget.className} "
-        "${widget.section} (${widget.session}) Submitted: $attendanceData");
+    final response = await http.post(
+      Uri.parse('http://192.168.50.136:5000/api/submit-attendance/sa'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(attendanceData),
+    );
+
+       if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Attendance Submitted Successfully!"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to Submit Attendance"),
+        ),
+      );
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

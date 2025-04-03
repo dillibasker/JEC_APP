@@ -1,13 +1,16 @@
 const express=require("express")
 const router=express.Router()
-const Student=require("../../Models/students")
+const Attendance=require("../../Models/attendanceSchema")
 
 //get all student - department wise
-
-router.get("/students/:department/:year/:section",async(req,res)=>{
-    const {department, year, section}=req.params
-    const students=await Student.find(department,year,section)
-    res.send(students)
-})
+router.get('/get-attendance', async (req, res) => {
+    try {
+      const { department, className, section, session } = req.query;
+      const records = await Attendance.find({ department, className, section, session });
+      res.json(records);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 module.exports=router
