@@ -24,3 +24,5 @@ router.get("/remark", async (req, res) => {
       res.status(500).json({ error: "Failed to fetch remarks" });
     }
   });
+
+  module.exports=router
