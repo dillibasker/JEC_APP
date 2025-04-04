@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  String userName = "kumaran";
+  String userName = "dilli";
 
   void _onItemTapped(int index) {
     setState(() {
@@ -117,7 +117,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   AppBar _buildAppBar() {
     return AppBar(
       toolbarHeight: 90,
