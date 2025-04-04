@@ -24,7 +24,5 @@ app.use("/api/submit-attendance", require("./Routes/Attendence/markAttendence"))
 app.use("/api/get-attendance", require("./Routes/Attendence/getAllStudents"));
 app.use("/api/remarks", require("./Routes/Remarks/remarksRoute"));
 
-
-
 const PORT=process.env.PORT || 5000
 app.listen(PORT,()=>{ console.log(`server running on port ${PORT}`)})
